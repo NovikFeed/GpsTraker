@@ -4,10 +4,12 @@ import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gps.model.data.local.Way
 import com.example.gps.model.repositoryes.GpsRecordServiceRepository
 import com.example.gps.model.repositoryes.WayDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -23,6 +25,9 @@ class GpsTrackerViewModel @Inject constructor(
     private val wayDataRepository: WayDataRepository,
 ) : ViewModel() {
     val serviceRunning = serviceRepository.serviceRunning
+
+    private val _animatePolyline = MutableStateFlow(false)
+            val animatePolyline = _animatePolyline
 
     private val _wayList = MutableStateFlow(emptyList<Way>())
     val wayList = _wayList
@@ -69,6 +74,14 @@ class GpsTrackerViewModel @Inject constructor(
 
     fun setDetailsWay(index: Int) {
         _detailsWay.value = listOf(_wayList.value[index])
+    }
+
+    fun setAnimation(){
+        _animatePolyline.value = true
+        viewModelScope.launch {
+            delay(3200)
+            _animatePolyline.value = false
+        }
     }
 
 }
