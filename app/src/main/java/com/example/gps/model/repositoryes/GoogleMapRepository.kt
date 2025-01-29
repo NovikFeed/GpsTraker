@@ -5,6 +5,7 @@ import android.location.Address
 import android.location.Geocoder
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +39,12 @@ class GoogleMapRepository @Inject constructor(
                 }
             }
         } else {
-            Address(Locale("en"))
+            val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+            if (addresses.isNullOrEmpty()){
+            Address(Locale("en"))}
+            else{
+                addresses[0]
+            }
         }
             }
     }

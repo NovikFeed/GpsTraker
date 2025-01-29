@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,12 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gps.viewModels.GpsTrackerViewModel
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.Polyline
@@ -54,10 +52,7 @@ fun WayDetails(viewModel: GpsTrackerViewModel = hiltViewModel()) {
     val cameraPosition = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(centralPoint, 12f)
     }
-    val builder = LatLngBounds.Builder()
-    way[0].arrayCoordinate.forEach{point -> builder.include(point)}
-    val bounds = builder.build()
-    Scaffold(topBar = { Text(text = "Маршрут від ${way[0].startDate}", fontSize = 24.sp) }, content =
+    Scaffold(modifier = Modifier.background(MaterialTheme.colorScheme.background),topBar = { Text(text = "Маршрут від ${way[0].startDate}", fontSize = 24.sp) }, content =
     {
         Column(modifier = Modifier.padding(it)) {
             GoogleMap(
@@ -66,9 +61,7 @@ fun WayDetails(viewModel: GpsTrackerViewModel = hiltViewModel()) {
                     .fillMaxHeight(0.5f),
                 cameraPositionState = cameraPosition
             ) {
-                cameraPosition.move(CameraUpdateFactory.newLatLngBounds(bounds, 100))
                 AnimatedOrNotPolyline(way[0].arrayCoordinate, isAnimate = animatePolyline)
-
             }
             Spacer(modifier = Modifier.padding(10.dp))
             Column(modifier = Modifier.fillMaxSize()) {
